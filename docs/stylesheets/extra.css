@@ -1,0 +1,13 @@
+/* Center Mermaid diagrams */
+.mermaid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1.5rem auto;
+  text-align: center;
+}
+
+.mermaid svg {
+  margin: 0 auto;
+  display: block;
+}

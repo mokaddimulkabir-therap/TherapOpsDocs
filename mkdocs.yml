@@ -1,0 +1,80 @@
+site_name: TherapOpsDocs
+site_description: Enterprise Operations Knowledge Base & SOPs
+site_author: Therap Operations Team
+
+theme:
+  name: material
+  palette:
+    # Light mode
+    - scheme: default
+      primary: indigo
+      accent: deep orange
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - scheme: slate
+      primary: indigo
+      accent: deep orange
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+
+extra_css:
+  - stylesheets/extra.css
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Provisioning:
+      - Overview: provisioning/index.md
+      - 1. Pre-Provisioning:
+          - Overview: provisioning/01-pre-provisioning/index.md
+          - Host Backup Runbook: provisioning/01-pre-provisioning/backup-runbook.md
+          - PXE & DHCP Staging: provisioning/01-pre-provisioning/pxe-dhcp-setup.md
+      - 2. OS Provisioning:
+          - Kickstart Execution & Validation: provisioning/02-provisioning/kickstart-execution.md
+      - 3. Base OS & Hardening:
+          - Overview: provisioning/03-post-install-base/index.md
+          - CIS Benchmark: provisioning/03-post-install-base/cis-hardening.md
+          - Kernel & Repositories: provisioning/03-post-install-base/repos-kernel.md
+          - FreeIPA / IDM & SSSD: provisioning/03-post-install-base/idm-sssd.md
+          - Security, Auditd & Syslog: provisioning/03-post-install-base/security-syslog.md
+      - 4. Network Migration:
+          - Overview: provisioning/04-network-migration/index.md
+          - App Server Network: provisioning/04-network-migration/app-server.md
+          - DB Server Network: provisioning/04-network-migration/db-server.md
+          - Persistent NIC Naming: provisioning/04-network-migration/nic-naming-rules.md
+      - 5. Workload & Storage:
+          - Oracle DB & RAC Prereqs: provisioning/05-workload-specific/oracle-prereqs.md
+          - RAC iSCSI & NetApp Multipath: provisioning/05-workload-specific/rac-storage-multipath.md
+      - 6. Checklist & Handover:
+          - Handover Checklist: provisioning/06-verification-handover/checklist.md
+          - Old Host Decommissioning: provisioning/06-verification-handover/decommissioning.md
