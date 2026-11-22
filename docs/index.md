@@ -9,14 +9,16 @@ Welcome to **TherapOpsDocs** — the enterprise operations knowledge base and st
 ```mermaid
 flowchart TD
     Ops["TherapOpsDocs Knowledge Base"]
-    Ops --> P["Host Provisioning\n(OL8, App, DB, RAC)"]
+    Ops --> P["On-Prem Provisioning\n(PXE, Kickstart, RAC)"]
+    Ops --> OCI["OCI Cloud Provisioning\n(Cloud-Init, AIDE, Docker)"]
     Ops --> N["Infrastructure & Networking\n(Future Scope)"]
     Ops --> S["Security & Identity\n(Future Scope)"]
 ```
 
 ### Active Modules
 
-* **[Host Provisioning & Lifecycle](provisioning/index.md)**: Standardized runbook for host re-imaging, Kickstart installation, security hardening, network migration, and Oracle RAC storage setup.
+* **[On-Prem Provisioning & Lifecycle](provisioning/index.md)**: Standardized runbook for PXE boot, Kickstart installation, base hardening, network migration, and Oracle RAC storage setup.
+* **[OCI Cloud Host Provisioning](oci-provisioning/index.md)**: Operational guide for Oracle Cloud Infrastructure (OCI) instances, including cloud-init verification, AIDE file integrity, volume extension, Docker CE versionlock, and system sanitization.
 
 ---
 

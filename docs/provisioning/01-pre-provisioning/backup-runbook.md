@@ -45,13 +45,15 @@ ls -la /home/oracle/
 
 ## 2. Automated Backup Script Execution
 
-A standard backup script (`backup.sh`) packages key configuration files into `/tmp/backup_<FQDN>.tar`.
+A standard backup script (`backup.sh`) packages key configuration files, network scripts, and storage definitions into `/tmp/backup_<FQDN>.tar`.
+
+[:material-download: Download `backup.sh`](../../scripts/backup.sh){ .md-button .md-button--primary }
+[:material-file-code: View Script Documentation](../../scripts/index.md#2-host-configuration-backup-script-backupsh){ .md-button }
 
 ### Step 1: Run the Backup Script on Target Host
 Run the backup script directly on the server to be rebuilt:
 ```bash
-# Execute local backup script
-sudo /usr/local/bin/backup.sh
+sudo ./backup.sh
 ```
 
 ### Step 2: Transfer Archive to Central Repository

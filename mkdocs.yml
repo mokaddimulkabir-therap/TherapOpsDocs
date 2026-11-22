@@ -35,6 +35,7 @@ extra_css:
 markdown_extensions:
   - admonition
   - pymdownx.details
+  - pymdownx.snippets
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
@@ -53,7 +54,7 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Provisioning:
+  - On-Prem Provisioning:
       - Overview: provisioning/index.md
       - 1. Pre-Provisioning:
           - Overview: provisioning/01-pre-provisioning/index.md
@@ -78,3 +79,13 @@ nav:
       - 6. Checklist & Handover:
           - Handover Checklist: provisioning/06-verification-handover/checklist.md
           - Old Host Decommissioning: provisioning/06-verification-handover/decommissioning.md
+  - OCI Cloud Provisioning:
+      - Overview: oci-provisioning/index.md
+      - Initial Checks & Packages: oci-provisioning/initial-checks-packages.md
+      - Security Hardening & AIDE: oci-provisioning/security-hardening.md
+      - Storage & LVM Management: oci-provisioning/storage-lvm.md
+      - Sanitization & Access: oci-provisioning/system-sanitization.md
+      - Workloads & Services: oci-provisioning/workloads-services.md
+      - Verification Checklist: oci-provisioning/verification-checklist.md
+  - Scripts & Tools:
+      - Overview & Downloads: scripts/index.md
