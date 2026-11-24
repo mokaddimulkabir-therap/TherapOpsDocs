@@ -35,28 +35,27 @@ fi
 
 ---
 
-## 2. Lock Down Default `opc` User
+## 2. System Users Expiry & Password Hardening
 
-The default cloud-provisioned `opc` user must be disabled from SSH access and passwordless sudo:
+Ensure system accounts cannot expire or become locked due to automated password aging policies:
 
-### Step 1: Backup & Invalidate SSH Authorized Keys
+### Disable Password Expiry for All System Users
+Run the following command to set max/min days and account expiration to disabled for all system accounts (UID <= 1000, excluding `nobody`):
+
 ```bash
-if [ -f /home/opc/.ssh/authorized_keys ]; then
-    mv /home/opc/.ssh/authorized_keys /home/opc/.ssh/authorized_keys.bak
-    chmod 600 /home/opc/.ssh/authorized_keys.bak
-fi
-```
-
-### Step 2: Disable Cloud-Init Sudo Rule
-Edit `/etc/sudoers.d/90-cloud-init-users`:
-```text
-# User rules for opc
-# opc ALL=(ALL) NOPASSWD:ALL
+awk -F: '$3 <= 1000 && $1 != "nobody" {print $1}' /etc/passwd | xargs -r -n1 sudo chage -I -1 -m 0 -M -1 -E -1
 ```
 
 ---
 
 ## 3. SSH Configuration & Root Access
+
+!!! important "Mandatory: Change Default Root Password"
+    Before locking remote root login, ensure the `root` user password has been updated to the standardized encrypted hash (or changed via `passwd root`) to prevent lockout:
+    ```bash
+    passwd root
+    ```
+    Or apply the standard shadow hash provided by security/operations team.
 
 1. **Disable Remote Root Login**:
    In `/etc/ssh/sshd_config`:
@@ -88,4 +87,26 @@ cd /root/post-installation-task-oap/shadow
 
 cd ../key-update-dir
 ./key-update.sh <USER_1> <USER_2> <USER_3>
+```
+
+---
+
+## 5. Final Cleanup: Lock Down Default `opc` User
+
+!!! warning "Perform as Last Step"
+    Only disable the default `opc` account after confirming your personal operational user account and root credentials can successfully log in with sudo privileges.
+
+### Step 1: Backup & Invalidate SSH Authorized Keys
+```bash
+if [ -f /home/opc/.ssh/authorized_keys ]; then
+    mv /home/opc/.ssh/authorized_keys /home/opc/.ssh/authorized_keys.bak
+    chmod 600 /home/opc/.ssh/authorized_keys.bak
+fi
+```
+
+### Step 2: Disable Cloud-Init Sudo Rule
+Edit `/etc/sudoers.d/90-cloud-init-users`:
+```text
+# User rules for opc
+# opc ALL=(ALL) NOPASSWD:ALL
 ```

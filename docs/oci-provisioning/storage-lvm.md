@@ -55,8 +55,29 @@ df -h /
     mkfs.xfs /dev/vg_app/lv_apps
 
     mkdir -p /apps
-    # Add to /etc/fstab:
-    # /dev/vg_app/lv_apps  /apps  xfs  defaults  0 0
+    # Retrieve filesystem UUID
+    blkid /dev/vg_app/lv_apps
+
+    # Append to /etc/fstab using UUID:
+    # UUID=<UUID_FROM_BLKID>  /apps  xfs  defaults  0 0
+    mount -a
+    ```
+
+=== "Logs Volume (`/logs`)"
+    ```bash
+    fdisk /dev/sdb
+    partprobe /dev/sdb
+    pvcreate /dev/sdb1
+    vgcreate vg_logs /dev/sdb1
+    lvcreate -n lv_logs -l 100%FREE vg_logs
+    mkfs.xfs /dev/vg_logs/lv_logs
+
+    mkdir -p /logs
+    # Retrieve filesystem UUID
+    blkid /dev/vg_logs/lv_logs
+
+    # Append to /etc/fstab using UUID:
+    # UUID=<UUID_FROM_BLKID>  /logs  xfs  defaults  0 0
     mount -a
     ```
 
@@ -70,22 +91,29 @@ df -h /
     mkfs.xfs /dev/vg_sftp/lv_sftp
 
     mkdir -p /sftp
-    # Add to /etc/fstab:
-    # /dev/vg_sftp/lv_sftp  /sftp  xfs  defaults  0 0
+    # Retrieve filesystem UUID
+    blkid /dev/vg_sftp/lv_sftp
+
+    # Append to /etc/fstab using UUID:
+    # UUID=<UUID_FROM_BLKID>  /sftp  xfs  defaults  0 0
     mount -a
     ```
 
 === "Syslog-NG Dedicated Volume (`/syslogng`)"
     ```bash
     fdisk /dev/sdb
+    partprobe /dev/sdb
     pvcreate /dev/sdb1
     vgcreate vg_syslogng /dev/sdb1
     lvcreate -n lv_syslogng -l 100%FREE vg_syslogng
     mkfs.xfs /dev/vg_syslogng/lv_syslogng
 
     mkdir -p /syslogng
-    # Add to /etc/fstab:
-    # UUID=<UUID>  /syslogng  xfs  defaults  0 0
+    # Retrieve filesystem UUID
+    blkid /dev/vg_syslogng/lv_syslogng
+
+    # Append to /etc/fstab using UUID:
+    # UUID=<UUID_FROM_BLKID>  /syslogng  xfs  defaults  0 0
     mount -a
     ```
 

@@ -87,21 +87,29 @@ crontab -e
 
 ## 4. Central Rsyslog & Auditd Forwarding
 
-Forward audit and security logs to regional collectors (`<SYSLOG_HOST_01>`, `<SYSLOG_HOST_02>`):
+Forward audit and security logs to regional collectors. Add an entry for each destination collector (`<SYSLOG_HOST_01>`, `<SYSLOG_HOST_02>`):
 
+### Step 1: Configure Rsyslog Audit Forwarding
+Add destination entry for your primary syslog host:
 ```bash
-cat << 'EOF' > /etc/rsyslog.d/audit.conf
-## Audit log to syslog collectors
+cat >> /etc/rsyslog.d/audit.conf << 'EOF'
+## Audit log to <SYSLOG_HOST_01>
 local3.info                                             @<SYSLOG_HOST_01>
 local3.info                                             stop
+EOF
+```
+
+If forwarding to a secondary/failover syslog host, append:
+```bash
+cat >> /etc/rsyslog.d/audit.conf << 'EOF'
+## Audit log to <SYSLOG_HOST_02>
 local3.info                                             @<SYSLOG_HOST_02>
 local3.info                                             stop
 EOF
+```
 
-# Append auth facility in /etc/rsyslog.conf
-# authpriv.*                                              @<SYSLOG_HOST_03>
-# *.err;mail.crit;auth.notice                             @<SYSLOG_HOST_03>
-
+### Step 2: Configure Auditd Syslog Plugin
+```bash
 # Configure auditd syslog plugin
 cp /etc/audit/plugins.d/syslog.conf /etc/audit/plugins.d/syslog.conf.orig
 
@@ -113,8 +121,10 @@ type = always
 args = LOG_INFO LOG_LOCAL3
 format = string
 EOF
+```
 
-# Restart auditd and rsyslog
-systemctl restart rsyslog.service
-service auditd restart
+### Step 3: Restart & Verify Services
+Restart both services and inspect their running status in a single command:
+```bash
+systemctl restart rsyslog.service && service auditd restart && systemctl status rsyslog auditd --no-pager
 ```
