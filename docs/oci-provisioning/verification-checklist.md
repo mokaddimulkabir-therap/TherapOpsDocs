@@ -47,23 +47,37 @@ sudo ./oci_checker.sh app --json
 
 ---
 
-## 📝 Manual Fallback Command Block
+## 📝 Standardized Task-by-Task Check Commands
 
-Run this composite check command directly on the host to generate the sign-off record:
+Execute or paste this standard verification sequence to audit tasks across the node:
 
 ```bash
-echo "=== 1. SWAP STATUS ===" && free -m
-echo "=== 2. MOTD CHECK ===" && ls -la /etc/motd.d/
-echo "=== 3. POSTFIX CONFIG ===" && grep -E '^(myhostname|mydomain|relayhost)\s*=' /etc/postfix/main.cf
-echo "=== 4. SYSSTAT CRON ===" && grep -E '59|MAILTO' /etc/cron.d/sysstat
-echo "=== 5. SNMP CONFIG ===" && grep -E '^\s*(syslocation|syscontact|rouser)' /etc/snmp/snmpd.conf
-echo "=== 6. LOGIN BANNER ===" && grep 'You' /etc/issue.net
-echo "=== 7. SYSSTAT RETENTION ===" && grep 'HISTORY=30' /etc/sysconfig/sysstat
-echo "=== 8. CHRONY CONFIG ===" && grep -E '^(bindcmdaddress|cmdallow)' /etc/chrony.conf
-echo "=== 9. LOGROTATE CONFIG ===" && grep -A 5 -E '/var/log/(wtmp|btmp)' /etc/logrotate.conf
-echo "=== 10. SSH ROOT LOGIN ===" && grep -i "^PermitRootLogin" /etc/ssh/sshd_config
-echo "=== 11. OCI HOSTINFO ===" && grep 'PRESERVE_HOSTINFO' /etc/oci-hostname.conf 2>/dev/null || true
-echo "=== 12. CRYPTO POLICY ===" && update-crypto-policies --show
-echo "=== 13. FILESYSTEMS & MOUNTS ===" && lsblk && df -hT
-echo "=== 14. CHRONY TRACKING ===" && chronyc sources -v
+echo "Task:01 | /etc/postfix/main.cf" && grep -E '^(myhostname|mydomain|relayhost)\s*=' /etc/postfix/main.cf
+echo "Task:02 | /etc/cron.d/sysstat" && grep -E '59|MAILTO' /etc/cron.d/sysstat
+echo "Task:03 | /etc/snmp/snmpd.conf" && grep -E '^\s*(syslocation|syscontact|rouser)' /etc/snmp/snmpd.conf
+echo "Task:04 | /etc/issue.net" && grep 'You' /etc/issue.net
+echo "Task:05 | /etc/sysconfig/sysstat" && grep 'HISTORY=30' /etc/sysconfig/sysstat
+echo "Task:06 | /etc/chrony.conf" && grep -E '^(bindcmdaddress|cmdallow)' /etc/chrony.conf
+echo "Task:07 | /etc/oci-hostname.conf" && grep 'PRESERVE_HOSTINFO' /etc/oci-hostname.conf 2>/dev/null || true
+echo "Task:08 | /etc/security/limits.conf" && grep -Ei 'soft|hard|oracle' /etc/security/limits.conf
+echo "Task:09 | /etc/logrotate.conf" && grep -A 5 -E '/var/log/(wtmp|btmp)' /etc/logrotate.conf
+echo "Task:10 | /etc/logrotate.d/syslog" && grep -E 'rotate|size' /etc/logrotate.d/syslog
+echo "Task:11 | /etc/rsyslog.conf" && grep -E '@syslog01-ta|@syslog01-oap' /etc/rsyslog.conf
+echo "Task:12 | /etc/motd.d/cockpit" && ls -la /etc/motd.d/cockpit 2>/dev/null || echo "Cockpit MOTD clean"
+echo "Task:13 | remove cockpit" && (rpm -q cockpit 2>/dev/null || echo "Cockpit not installed")
+echo "Task:14 | List all the Disk" && lsblk && df -hT
+echo "Task:15 | Check Crypto Policy" && update-crypto-policies --show
+echo "Task:16 | Check umask" && umask
+echo "Task:17 | Check Memory & Swap" && free -m
+echo "Task:18 | Check /usr/local mounts" && ls -ld /usr/local/Oracle /usr/local/tomcat /usr/local/auth-tomcat /usr/local/therap 2>/dev/null || true
+echo "Task:19 | Check /apps" && ls -ld /apps 2>/dev/null || echo "/apps not present on this host"
+echo "Task:20 | Check /logs ACL" && (getfacl /logs 2>/dev/null || echo "/logs not present on this host")
+echo "Task:21 | Check Application Directory" && ls -ld /usr/local/therap /usr/local/app 2>/dev/null || true
+echo "Task:22 | Check User Login" && who -u
+echo "Task:23 | Check User Shadow and Sudo" && sudo -l -U <USER>
+echo "Task:24 | Check PermitRootLogin no" && grep -i "^PermitRootLogin" /etc/ssh/sshd_config
+echo "Task:25 | Check ACL on Sorry Server" && (getfacl planned.html 2>/dev/null || echo "N/A for non-sorry hosts")
+echo "Task:26 | Check NTP/chrony" && chronyc sources -v
+echo "Task:27 | Check AIDE Configuration" && (ls -l /etc/aide.conf /var/lib/aide/aide.db.gz /root/aide/aide_check.sh 2>/dev/null || true)
+echo "Task:28 | Check AIDE Crontab" && crontab -l -u root 2>/dev/null | grep -i aide || echo "No AIDE cron found"
 ```
